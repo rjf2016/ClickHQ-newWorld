@@ -2,12 +2,25 @@ module.exports = {
     name: 'Group',
     description: 'Create a group',
     aliases: ['group'],
-    execute(message, args){
+    execute(message){
         let user = message.author
             message.reply(`${user.username} has started a group. React to this message with a wave (:wave:) to join the group`)
-                .then(message =>{
-                    let messageid = message.id
-                    console.log(messageid)
+                .then(message => {
+                    const filter = (reaction) => {
+                        return reaction.emoji.name === '👋';
+                    };
+
+                    const collector = message.createReactionCollector(filter, { time: 600000 });
+
+                    collector.on('collect', (reaction, user) => {
+                        console.log(`Collected ${reaction.emoji.name} from ${user.tag}`);
+                    });
+
+                    collector.on('end', collected => {
+                        console.log(`Collected ${collected.size} items`);
+                    });
+
+
                 });
         //let member = message.member
         let allrole = message.guild.roles.cache.find(r => r.name === '@everyone')
@@ -26,9 +39,5 @@ module.exports = {
                 },
             ],
         });
-// asdf
-
-        message.awaitReactions(time: 60000, errors: ['time'])
-}
-
+    }
 }
