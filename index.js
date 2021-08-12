@@ -4,7 +4,9 @@ const { prefix, token } = require('./config.json');
 // Hard Coding the rules message for now - come back to this hack
 const rulesMessage = '873699101508788235'
 
-const client = new Discord.Client({  partials: ['MESSAGES', 'CHANNEL', 'REACTION']  });
+const Intss = new Discord.Intents(Discord.Intents.ALL)
+
+const client = new Discord.Client({ partials: ['MESSAGES', 'CHANNEL', 'REACTION'], ws: { intents: Intss } })
 client.commands = new Discord.Collection();
 client.cooldowns = new Discord.Collection();
 
@@ -94,12 +96,12 @@ client.on('message', message => {
 
 client.on('messageReactionAdd', (reaction, user) => {
 	const message = reaction.message, emoji = reaction.emoji;
-
 	if (emoji.name == '✅') {
 		console.log(`${user.username} has accepted`);
-		message.guild.fetchMember(user.id).then(member => {
-			member.addRole('871585575986147339')
-		});
+		const role = reaction.message.guild.roles.cache.find(r => r.id === '871585575986147339')
+		const { guild } = reaction.message
+		const member = guild.members.cache.find(member => member.id === user.id)
+		member.roles.add(role)
 	} else if (emoji.name == '❎') {
 		console.log(`Declined D:`)
 	}
