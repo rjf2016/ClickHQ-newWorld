@@ -7,12 +7,15 @@ module.exports = {
   aliases: ['wipe'],
   cooldown: 5,
   guildOnly: true,
+  usage: '<channel to delete *or* * for wildcard> / <category the channel belongs to>',
+  permissions: 'ADMINISTRATOR',
 	execute(message, args) {
 
     const path = args.join(" ").split(" / ")
+
     const [ pathChannel, pathCategory ] = [ path[0], path[1] ]
 
-    if (!pathChannel || !pathCategory) {
+    if (path.length !== 2 || !pathChannel || !pathCategory) {
       message.react('❓')
       message.channel.send(errorEmbedMessage)
       return
@@ -31,12 +34,6 @@ module.exports = {
       .setFooter("If youre still confused, dont run the command - you might delete the server")
       .setColor(config.color.err)
 
-    // If user doesnt have admin perm => return noPermMessage
-    if (!message.member.hasPermission('ADMINISTRATOR')) {
-      message.react('❌')
-      message.channel.send(msgEmbed.setTitle('This command is only for admins \:eyes:').setColor(config.color.err))
-      return
-    }
 
     const occurances = countChannels(pathChannel, foundCategory)
 

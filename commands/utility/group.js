@@ -1,67 +1,60 @@
-const { VoiceChannel, TeamMember } = require("discord.js");
+const Discord = require('discord.js');
+const config = require('../../config.json')
 
 module.exports = {
-    name: 'Group',
-    description: 'Create a group',
-    aliases: ['group'],
-    execute(message)  {
+	name: 'Group',
+	description: 'Create a group',
+	aliases: ['group'],
+	cooldown: 5,
+	execute: async message => {
 
-        const createVoiceChannel = message.guild.channels.create(`${message.author.username}'s group`)
+		// This command requires that the server contains a category dedicated to housing spawned group channels.
+		// The name of this category is defined as`serverGroupCategoryName` in the config.json file, in case it is ever changed. The category name is CASE SENSITIVE!
+		const groupCategory = config.serverGroupCategoryName;
+		const category = message.guild.channels.cache.find(c => c.name == groupCategory && c.type === 'category')
+		const allRoles = message.guild.roles.cache.find(role => role.name === '@everyone')
 
+		const Filter = (reaction, user) => reaction.emoji.name === '👋';
 
-        const author = message.author
+		const inviteEmbed = new Discord.MessageEmbed()
+			.setTitle(`${message.author.username} has started a group`)
+			.setDescription('React to this message with a 👋 to join the group')
+			.setColor(config.color.info)
 
-        // const User = await client.users.fetch(id);
-        // const member = await guild.members.fetch(User);
+		const inviteMessage = await message.channel.send(inviteEmbed)
 
-        const allRoles = message.guild.roles.cache.find(role => role.name === '@everyone')
-        let voiceChannelIDArr = [];
+		const createChannel = await message.guild.channels.create(`${message.author.username}'s group`, {
+			type: 'voice',
+			parent: category.id,
+			permissionOverwrites: [
+				{
+					id: allRoles.id,
+					deny: ['VIEW_CHANNEL'],
+				},
+				{
+					id: message.author.id,
+					allow: ['VIEW_CHANNEL'],
+				},
+			]
+		})
 
-        // Reply to command - acknowledge that user started group
-        const reply = message.reply(`${message.author.username} has started a group. React to this message with a wave (:wave:) to join the group`)
-        const channel = message.guild.channels.create(`${message.author.username}'s group`, {
-                            type: 'voice',
-                            permissionOverwrites: [
-                                {
-                                    id: allRoles.id,
-                                    deny: ['VIEW_CHANNEL'],
-                                },
-                                {
-                                    id: message.author.id,
-                                    allow: ['VIEW_CHANNEL'],
-                                },
-                            ]
-                        })
+		if (!category) {
+			console.error(`Couldn't find the category ***${groupCategory}*** in this server.`)
+			return;
+		}
 
+		await inviteMessage.react('👋');
 
+		const collector = inviteMessage.createReactionCollector(Filter, { time: 100000 });
 
-        // const member = message.guild.members.cache.find(member => member.id === author.id)
+		collector.on('collect', (reaction, user) => {
+			createChannel.updateOverwrite(user, {
+				VIEW_CHANNEL: true
+			}).catch(console.error);
+		})
 
-        //             member.voice.setChannel(channel.id)
-        //             voiceChannelIDArr.push(channel.id)
+		collector.on('end', collected => console.log(`COLLECTED ${collected.size} items`))
 
-                    console.log(channel)
-    }
+	}
 
 }
-
-        // const filter = (reaction) => {
-        //     return reaction.emoji.name === '👋';
-        // };
-
-        // console.log(`MSG: ${msg}`)
-        // const collector = msg.createReactionCollector(filter, { time: 600000 });
-
-        // collector.on('collect', (reaction, user) => {
-        //     const reactor = msg.guild.members.cache.find(member => member.id === user.id)
-        //     let voiceChannelID = voiceChannelID[0]
-        //     let voiceChannel = msg.guild.channels.cache.get(voiceChannelID)
-        //     voiceChannel.updateOverwrite(reactor, { VIEW_CHANNEL: true })
-        //     reactor.voice.setChannel(voiceChannelID)
-
-        //     console.log(`message: ${msg}`)
-        // });
-
-        // collector.on('end', collected => {
-        //     console.log(`Collected ${collected.size} items`);
-        // });

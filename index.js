@@ -94,19 +94,19 @@ client.on('message', message => {
 	}
 });
 
-client.on('messageReactionAdd', (reaction, user) => {
-	const message = reaction.message, emoji = reaction.emoji;
-	if (emoji.name == '✅') {
-		console.log(`${user.username} has accepted`);
-		const role = reaction.message.guild.roles.cache.find(r => r.id === '871585575986147339')
-		const { guild } = reaction.message
-		const member = guild.members.cache.find(member => member.id === user.id)
-		member.roles.add(role)
-	} else if (emoji.name == '❎') {
-		console.log(`Declined D:`)
-	}
+// client.on('messageReactionAdd', (reaction, user) => {
+// 	const message = reaction.message, emoji = reaction.emoji;
+// 	if (emoji.name == '✅') {
+// 		console.log(`${user.username} has accepted`);
+// 		const role = reaction.message.guild.roles.cache.find(r => r.id === '871585575986147339')
+// 		const { guild } = reaction.message
+// 		const member = guild.members.cache.find(member => member.id === user.id)
+// 		member.roles.add(role)
+// 	} else if (emoji.name == '❎') {
+// 		console.log(`Declined D:`)
+// 	}
 
-})
+// })
 
 
 
