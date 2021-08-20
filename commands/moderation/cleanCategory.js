@@ -1,15 +1,13 @@
-const Discord = require('discord.js');
-const config = require('../../config.json')
+const { MessageEmbed } = require('discord.js');
+const config = require('../../config.json');
+const BaseCommand = require('../../utils/structures/BaseCommand');
 
-module.exports = {
-	name: 'clean',
-	description: 'Delete channels within category',
-  aliases: ['wipe'],
-  cooldown: 5,
-  guildOnly: true,
-  usage: '<channel to delete *or* * for wildcard> / <category the channel belongs to>',
-  permissions: 'ADMINISTRATOR',
-	execute: async (message, args) => {
+module.exports = class CleanCategoryCommand extends BaseCommand {
+  constructor() {
+    super('clean', 'moderation', ['wipe'], '[channel | * (for wildcard)] / [category]', 'Deletes channels within category', 'ADMIN')
+  }
+
+	async run(client, message, args) {
 
     const path = args.join(" ").split(" / ")
     const [ pathChannel, pathCategory ] = [ path[0], path[1] ]
@@ -28,18 +26,18 @@ module.exports = {
     const occurances = countChannels(pathChannel, foundCategory)
     const deletedCountMessage = occurances.size < 2 ? 'one channel' : `${occurances.size} channels`
 
-    const confirmEmbed = new Discord.MessageEmbed()
+    const confirmEmbed = new MessageEmbed()
       .setTitle(`This would delete ***${occurances.size} channel(s)*** from ***${pathCategory}***`)
       .setDescription('React with one of the following to proceed')
       .addFields( {name: '✅ = Continue   ', value: '\u200b', inline: true}, { name: "   ❌ = Marty I'm scared", value: '\u200b', inline: true} )
       .setFooter("If you don't answer in 15 seconds the command will be cancelled")
       .setColor(config.color.info)
 
-    const successEmbed = new Discord.MessageEmbed()
+    const successEmbed = new MessageEmbed()
       .setDescription(`🧹   ${message.author.username} just cleaned up ${deletedCountMessage}    🧹`)
       .setColor(config.color.success)
 
-    const cancelEmbed = new Discord.MessageEmbed()
+    const cancelEmbed = new MessageEmbed()
       .setDescription('👋   Cleanup has been cancelled  👋')
       .setColor(config.color.dark)
 
@@ -60,11 +58,12 @@ module.exports = {
       } else if (reaction.emoji.name === '❌') {
         confirmationMessage.edit(cancelEmbed)
       }
-      confirmationMessage.reactions.removeAll()
+      return confirmationMessage.reactions.removeAll()
     })
 
     collector.on('end', collected => {
-      if (!collected.size)  {
+      console.log(collected.size)
+      if (collected.size < 1)  {
         confirmationMessage.edit(cancelEmbed)
         confirmationMessage.reactions.removeAll()
       }
