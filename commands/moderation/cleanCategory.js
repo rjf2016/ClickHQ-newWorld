@@ -29,10 +29,10 @@ module.exports = {
     const deletedCountMessage = occurances.size < 2 ? 'one channel' : `${occurances.size} channels`
 
     const confirmEmbed = new Discord.MessageEmbed()
-      .setTitle(`This would delete ${occurances.size} channel(s) from ${pathCategory}`)
+      .setTitle(`This would delete ***${occurances.size} channel(s)*** from ***${pathCategory}***`)
       .setDescription('React with one of the following to proceed')
-      .addFields( {name: '✅ Continue   ', value: '\u200b', inline: true}, { name: "   ❌ Marty I'm scared", value: '\u200b', inline: true} )
-      .setFooter("If you don't answer in 10 seconds the command will be cancelled")
+      .addFields( {name: '✅ = Continue   ', value: '\u200b', inline: true}, { name: "   ❌ = Marty I'm scared", value: '\u200b', inline: true} )
+      .setFooter("If you don't answer in 15 seconds the command will be cancelled")
       .setColor(config.color.info)
 
     const successEmbed = new Discord.MessageEmbed()
@@ -51,7 +51,7 @@ module.exports = {
     await confirmationMessage.react('✅')
     await confirmationMessage.react('❌')
 
-    const collector = confirmationMessage.createReactionCollector(Filter, { time: 10000 })
+    const collector = confirmationMessage.createReactionCollector(Filter, { time: 15000 })
 
     collector.on('collect', (reaction, user) => {
       if (reaction.emoji.name === '✅') {
