@@ -1,12 +1,12 @@
+const BaseCommand = require('../../utils/structures/BaseCommand');
 const { prefix } = require('../../config.json');
 
-module.exports = {
-	name: 'help',
-	description: 'List all of my commands or info about a specific command.',
-	aliases: ['commands'],
-	usage: '[command name]',
-	cooldown: 5,
-	execute(message, args) {
+module.exports = class help extends BaseCommand {
+	constructor() {
+		super('help', 'utility', ['commands'], 'help [command] or commands', 'List all of my commands or info about a specific command.', 'ANY');
+	}
+
+	async run(client, message, args) {
 		const data = [];
 		const { commands } = message.client;
 
@@ -42,5 +42,5 @@ module.exports = {
 		data.push(`**Cooldown:** ${command.cooldown || 3} second(s)`);
 
 		message.channel.send(data, { split: true });
-	},
+	}
 };

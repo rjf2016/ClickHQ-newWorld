@@ -1,0 +1,17 @@
+{
+	"Create new command": {
+		"prefix": "newc",
+		"body": [
+			"const BaseCommand = require('../../utils/structures/BaseCommand');\n",
+			"module.exports = class ${TM_FILENAME_BASE} extends BaseCommand {",
+			"\tconstructor() {",
+			"\t\tsuper('${TM_FILENAME_BASE:/downcase}', '${TM_DIRECTORY/.*[\\\\|\\/]+(.*)/$1/}', [${1:alias}], '${2:usage}', '${3:description}', '${4:permissions}');",
+			"\t}\n",
+			"\tasync run(client, message, args) {",
+			"\t\t$0",
+			"\t}",
+			"};"
+		],
+		"description": "Creates a new command class based on file name"
+	}
+}

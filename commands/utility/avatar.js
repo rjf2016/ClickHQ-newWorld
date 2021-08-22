@@ -1,8 +1,11 @@
-module.exports = {
-	name: 'avatar',
-	description: 'Get the avatar URL of the tagged user(s), or your own avatar.',
-	aliases: ['icon', 'pfp'],
-	execute(message) {
+const BaseCommand = require('../../utils/structures/BaseCommand');
+
+module.exports = class avatar extends BaseCommand {
+	constructor() {
+		super('avatar', 'utility', ['icon', 'pfp'], 'avatar [@user]', 'Gets a users avatar picture', 'ANY');
+	}
+
+	async run(client, message) {
 		if (!message.mentions.users.size) {
 			return message.channel.send(`Your avatar: <${message.author.displayAvatarURL({ dynamic: true })}>`);
 		}
@@ -12,5 +15,5 @@ module.exports = {
 		});
 
 		message.channel.send(avatarList);
-	},
+	}
 };
