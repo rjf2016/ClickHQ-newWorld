@@ -2,7 +2,14 @@ const BaseCommand = require('../../utils/structures/BaseCommand');
 
 module.exports = class avatar extends BaseCommand {
 	constructor() {
-		super('avatar', 'utility', ['icon', 'pfp'], 'avatar [@user]', 'Gets a users avatar picture', 'ANY');
+		super({
+			name: 'avatar',
+			category: 'utility',
+			aliases: ['icon', 'pfp'],
+			usage: 'avatar [@user]',
+			description: 'Gets a users avatar picture',
+			requiredPermission: 'ANY',
+		});
 	}
 
 	async run(client, message) {

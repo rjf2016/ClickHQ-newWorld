@@ -2,7 +2,12 @@ const BaseCommand = require('../../utils/structures/BaseCommand');
 
 module.exports = class newWorldRelease extends BaseCommand {
 	constructor() {
-		super('release', 'fun', ['release'], 'release', 'ANY');
+		super({
+			name: 'release',
+			category: 'fun',
+			description: 'Get the most up to date news on New Worlds release',
+			requiredPermission: 'ANY',
+		});
 	}
 
 	async run(client, message) {

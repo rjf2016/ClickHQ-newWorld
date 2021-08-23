@@ -1,21 +1,47 @@
+/* eslint-disable no-useless-escape */
 const BaseCommand = require('../../utils/structures/BaseCommand');
-const { prefix } = require('../../config.json');
+const { prefix, color } = require('../../config.json');
 
 module.exports = class help extends BaseCommand {
 	constructor() {
-		super('help', 'utility', ['commands'], 'help [command] or commands', 'List all of my commands or info about a specific command.', 'ANY');
+		super({
+			name: 'help',
+			category: 'utility',
+			aliases: ['commands'],
+			usage: 'help or help [command]',
+			description: 'Get a list of Click Bot commands or get help with a specific command',
+			requiredPermission: 'ANY',
+		});
 	}
 
 	async run(client, message, args) {
 		const data = [];
 		const { commands } = message.client;
+		const commandHelperObj = {};
+
+		const helpEmbed = {
+			title: 'Click Bot\'s Commands',
+			url: 'https://github.com/rjf2016/ClickHQ-newWorld',
+			thumbnail: { url: 'https://cdn.discordapp.com/avatars/872627726098514020/6a82e78394a88dc7f75245e1eda1f50f.webp' },
+			fields: [],
+			color: color.info,
+		};
 
 		if (!args.length) {
-			data.push('Here\'s a list of all my commands:');
-			data.push(commands.map(command => command.name).join(', '));
-			data.push(`\nYou can send \`${prefix}help [command name]\` to get info on a specific command!`);
+			commands.forEach(o => {
+				commandHelperObj[o.category] = commandHelperObj[o.category] || new Set();
+				commandHelperObj[o.category].add(o.name);
+			});
 
-			return message.author.send(data, { split: true })
+			for (const category in commandHelperObj) {
+				const categoryCommands = [...commandHelperObj[category]].join(' , ');
+				console.log(categoryCommands);
+				helpEmbed.fields.push({ name: category, value: categoryCommands });
+			}
+
+			helpEmbed.fields.push({ name: '\u200B', value: 'Use ``!help [command]`` to get more info on a command!' });
+
+			return message.author.send({ embed: helpEmbed })
 				.then(() => {
 					if (message.channel.type === 'dm') return;
 					message.reply('I\'ve sent you a DM with all my commands!');

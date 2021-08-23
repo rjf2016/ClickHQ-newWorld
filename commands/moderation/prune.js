@@ -2,7 +2,13 @@ const BaseCommand = require('../../utils/structures/BaseCommand');
 
 module.exports = class prune extends BaseCommand {
 	constructor() {
-		super('prune', 'moderation', [], 'prune [number]', 'Delete messages from current channel', 'admin');
+		super({
+			name: 'prune',
+			category: 'moderation',
+			usage: 'prune [number]',
+			description: 'Delete messages from current channel',
+			requiredPermission: 'MOD',
+		});
 	}
 
 	async run(message, args) {

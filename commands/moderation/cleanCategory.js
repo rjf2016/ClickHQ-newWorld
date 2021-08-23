@@ -5,7 +5,14 @@ const BaseCommand = require('../../utils/structures/BaseCommand');
 
 module.exports = class cleanCategory extends BaseCommand {
 	constructor() {
-		super('clean', 'moderation', ['wipe'], '[channel | * (for wildcard)] / [category]', 'Deletes channels within category', 'ADMIN');
+		super({
+			name: 'clean',
+			category: 'moderation',
+			aliases: ['wipe'],
+			usage: '[channel | * (for wildcard)] / [category]',
+			description: 'Deletes channels within category',
+			requiredPermission: 'ADMIN',
+		});
 	}
 
 	async run(client, message, args) {

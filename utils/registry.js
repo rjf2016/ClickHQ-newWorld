@@ -3,6 +3,7 @@ const fs = require('fs').promises;
 const BaseCommand = require('./structures/BaseCommand');
 const BaseEvent = require('./structures/BaseEvent');
 
+
 async function registerCommands(client, dir = '') {
 	const filePath = path.join(__dirname, dir);
 	const files = await fs.readdir(filePath);

@@ -2,7 +2,14 @@ const BaseCommand = require('../../utils/structures/BaseCommand');
 
 module.exports = class kick extends BaseCommand {
 	constructor() {
-		super('kick', 'moderation', ['boot'], 'kick [@user]', 'Boots a user from the server', 'MOD');
+		super({
+			name: 'kick',
+			category: 'moderation',
+			aliases: ['boot'],
+			usage: 'kick [@user]',
+			description: 'Boots a user from the server',
+			requiredPermission: 'MOD',
+		});
 	}
 
 	async run(client, message) {

@@ -3,7 +3,13 @@ const BaseCommand = require('../../utils/structures/BaseCommand');
 
 module.exports = class reload extends BaseCommand {
 	constructor() {
-		super('reload', 'utility', [], 'reload [command]', 'Reloads a command', 'MOD');
+		super({
+			name:'reload',
+			category: 'utility',
+			usage: 'reload [command]',
+			description: 'Reloads a command',
+			requiredPermission: 'MOD',
+		});
 	}
 
 	async run(client, message, args) {

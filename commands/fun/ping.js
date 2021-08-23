@@ -2,7 +2,12 @@ const BaseCommand = require('../../utils/structures/BaseCommand');
 
 module.exports = class ping extends BaseCommand {
 	constructor() {
-		super('ping', 'fun', [], 'ping', 'ANY');
+		super({
+			name: 'ping',
+			category: 'fun',
+			description: 'Get a response from Click Bot',
+			requiredPermission: 'ANY',
+		});
 	}
 
 	async run(client, message) {
