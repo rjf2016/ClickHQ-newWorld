@@ -1,18 +1,12 @@
 const fs = require('fs');
-const BaseCommand = require('../../utils/structures/BaseCommand');
 
-module.exports = class reload extends BaseCommand {
-	constructor() {
-		super({
-			name:'reload',
-			category: 'utility',
-			usage: 'reload [command]',
-			description: 'Reloads a command',
-			requiredPermission: 'MOD',
-		});
-	}
+module.exports = {
+	name:'reload',
+	category: 'utility',
+	usage: 'reload [command]',
+	description: 'Reloads a command',
 
-	async run(client, message, args) {
+	run: async (client, message, args) => {
 		const commandName = args[0].toLowerCase();
 		const command = message.client.commands.get(commandName)
 			|| message.client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
@@ -35,5 +29,5 @@ module.exports = class reload extends BaseCommand {
 			console.error(error);
 			message.channel.send(`There was an error while reloading a command \`${command.name}\`:\n\`${error.message}\``);
 		}
-	}
+	},
 };

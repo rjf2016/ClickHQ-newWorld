@@ -1,20 +1,16 @@
 /* eslint-disable no-useless-escape */
-const BaseCommand = require('../../utils/structures/BaseCommand');
 const { prefix, color } = require('../../config.json');
+const { MessageEmbed } = require('discord.js');
 
-module.exports = class help extends BaseCommand {
-	constructor() {
-		super({
-			name: 'help',
-			category: 'utility',
-			aliases: ['commands'],
-			usage: 'help or help [command]',
-			description: 'Get a list of Click Bot commands or get help with a specific command',
-			requiredPermission: 'ANY',
-		});
-	}
+module.exports = {
+	name: 'help',
+	category: 'utility',
+	aliases: ['commands'],
+	usage: 'help or help [command]',
+	description: 'Get a list of Click Bot commands or get help with a specific command',
+	requiredPermission: 'ANY',
 
-	async run(client, message, args) {
+	run: async (client, message, args) => {
 		const data = [];
 		const { commands } = message.client;
 		const commandHelperObj = {};
@@ -68,5 +64,5 @@ module.exports = class help extends BaseCommand {
 		data.push(`**Cooldown:** ${command.cooldown || 3} second(s)`);
 
 		message.channel.send(data, { split: true });
-	}
+	},
 };

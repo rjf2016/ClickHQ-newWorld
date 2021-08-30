@@ -1,18 +1,13 @@
 const config = require('../../config.json');
 const { MessageEmbed } = require('discord.js');
-const BaseCommand = require('../../utils/structures/BaseCommand');
 
-module.exports = class group extends BaseCommand {
-	constructor() {
-		super({
-			name: 'group',
-			category:'utility',
-			description: 'Creates a hidden voice channel, and puts a message in chat saying you just set up a group. When other users (react) with a 👋 they can view/join your group',
-			requiredPermission: 'ANY',
-		});
-	}
+module.exports = {
+	name: 'group',
+	category:'utility',
+	description: 'Creates a hidden voice channel, and puts a message in chat saying you just set up a group. When other users (react) with a 👋 they can view/join your group',
+	requiredPermission: 'ANY',
 
-	async run(client, message) {
+	run: async (client, message) => {
 		if (message.guild === null) return message.reply('I cant run this command in a DM!');
 		// This command requires that the server contains a category dedicated to housing spawned group channels.
 		// The name of this category is defined as`serverGroupCategoryName` in the config.json file, in case it is ever changed. The category name is CASE SENSITIVE!
@@ -59,5 +54,5 @@ module.exports = class group extends BaseCommand {
 
 		collector.on('end', collected => console.log(`COLLECTED ${collected.size} items`));
 
-	}
+	},
 };

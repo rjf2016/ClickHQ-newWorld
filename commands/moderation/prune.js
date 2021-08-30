@@ -1,17 +1,8 @@
-const BaseCommand = require('../../utils/structures/BaseCommand');
+module.exports = {
+	name: 'prune',
 
-module.exports = class prune extends BaseCommand {
-	constructor() {
-		super({
-			name: 'prune',
-			category: 'moderation',
-			usage: 'prune [number]',
-			description: 'Delete messages from current channel',
-			requiredPermission: 'MOD',
-		});
-	}
+	run: async (client, message, args) => {
 
-	async run(message, args) {
 		const amount = parseInt(args[0]) + 1;
 
 		if (isNaN(amount)) {
@@ -25,5 +16,5 @@ module.exports = class prune extends BaseCommand {
 			console.error(err);
 			message.channel.send('there was an error trying to prune messages in this channel!');
 		});
-	}
+	},
 };

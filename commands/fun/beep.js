@@ -1,16 +1,8 @@
-const BaseCommand = require('../../utils/structures/BaseCommand');
+module.exports = {
+	name: 'beep',
+	aliases: ['b'],
 
-module.exports = class beep extends BaseCommand {
-	constructor() {
-		super({
-			name: 'beep',
-			category: 'fun',
-			description: 'Get a response from Click Bot',
-			requiredPermission: 'ANY',
-		});
-	}
-
-	async run(client, message) {
-		message.channel.send('Boop');
-	}
+	run: async (client, message) => {
+		message.channel.send('Beep');
+	},
 };

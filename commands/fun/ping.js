@@ -1,16 +1,8 @@
-const BaseCommand = require('../../utils/structures/BaseCommand');
+module.exports = {
+	name: 'ping',
+	aliases: ['p'],
 
-module.exports = class ping extends BaseCommand {
-	constructor() {
-		super({
-			name: 'ping',
-			category: 'fun',
-			description: 'Get a response from Click Bot',
-			requiredPermission: 'ANY',
-		});
-	}
-
-	async run(client, message) {
-		message.channel.send('Pong :ping_pong:');
-	}
+	run: async (client, message) => {
+		message.channel.send(`${client.ws.ping}ms ping`);
+	},
 };

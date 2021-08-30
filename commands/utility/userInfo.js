@@ -1,16 +1,10 @@
-const BaseCommand = require('../../utils/structures/BaseCommand');
+module.exports = {
+	name: 'userInfo',
+	category: 'utility',
+	description: 'Display info about yourself',
 
-module.exports = class userInfo extends BaseCommand {
-	constructor() {
-		super({
-			name: 'userInfo',
-			category: 'utility',
-			description: 'Display info about yourself',
-			requiredPermission: 'ANY',
-		});
-	}
-
-	async run(client, message) {
+	run: async (client, message) => {
 		message.channel.send(`Your username: ${message.author.username}\nYour ID: ${message.author.id}`);
-	}
+	},
+
 };

@@ -1,21 +1,13 @@
 /* eslint-disable no-unused-vars */
 const { MessageEmbed } = require('discord.js');
 const config = require('../../config.json');
-const BaseCommand = require('../../utils/structures/BaseCommand');
 
-module.exports = class cleanCategory extends BaseCommand {
-	constructor() {
-		super({
-			name: 'clean',
-			category: 'moderation',
-			aliases: ['wipe'],
-			usage: '[channel | * (for wildcard)] / [category]',
-			description: 'Deletes channels within category',
-			requiredPermission: 'ADMIN',
-		});
-	}
 
-	async run(client, message, args) {
+module.exports = {
+	name: 'clean',
+	aliases: ['cc'],
+
+	run: async (client, message, args) => {
 
 		const path = args.join(' ').split(' / ');
 		const [ pathChannel, pathCategory ] = [ path[0], path[1] ];
@@ -73,5 +65,5 @@ module.exports = class cleanCategory extends BaseCommand {
 				confirmationMessage.reactions.removeAll();
 			}
 		});
-	}
+	},
 };
