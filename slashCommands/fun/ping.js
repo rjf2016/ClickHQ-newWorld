@@ -1,7 +1,7 @@
 module.exports = {
 	name: 'ping',
 	description: 'returns websocket ping',
-	type: 'CHAT_INPUT',
+	userPermissions: ['ADMINISTRATOR'],
 	/**
      *
      * @param {Client} client
@@ -9,6 +9,6 @@ module.exports = {
      * @param {String[]} args
      */
 	run: async (client, interaction) => {
-		interaction.followUp({ content: `${client.ws.ping}ms!` });
+		interaction.reply({ content: `${client.ws.ping}ms!` });
 	},
 };

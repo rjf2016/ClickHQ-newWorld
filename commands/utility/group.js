@@ -44,7 +44,7 @@ module.exports = {
 
 		await inviteMessage.react('👋');
 
-		const collector = inviteMessage.createReactionCollector(Filter, { time: 100000 });
+		const collector = inviteMessage.createReactionCollector(Filter, { time: 15000 });
 
 		collector.on('collect', (reaction, user) => {
 			createChannel.updateOverwrite(user, {

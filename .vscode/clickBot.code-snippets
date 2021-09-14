@@ -1,17 +1,17 @@
 {
-	"Create new command": {
-		"prefix": "newc",
+	"New Slash command": {
+		"prefix": "newsc",
 		"body": [
-			"const BaseCommand = require('../../utils/structures/BaseCommand');\n",
-			"module.exports = class ${TM_FILENAME_BASE} extends BaseCommand {",
-			"\tconstructor() {",
-			"\t\tsuper('${TM_FILENAME_BASE:/downcase}', '${TM_DIRECTORY/.*[\\\\|\\/]+(.*)/$1/}', [${1:alias}], '${2:usage}', '${3:description}', '${4:permissions}');",
-			"\t}\n",
-			"\tasync run(client, message, args) {",
-			"\t\t$0",
-			"\t}",
-			"};"
+			"module.exports = {",
+			"\tname: '${TM_FILENAME_BASE:command name}',",
+			"\tdescription: '${1:description}',",
+			"\tuserPermissions: ['${2:ADMINISTRATOR}'],",
+			"\tcategory: '${TM_DIRECTORY/.*[\\\\|\\/]+(.*)/$1/}',\n",
+			"\trun: async (client, interaction, args) => {",
+			"\t\t${0:interaction.reply({ content: 'This is the ${TM_FILENAME_BASE/(.*)/${1:/upcase}/} command' \\});}",
+			"\t},",
+			"};",
 		],
-		"description": "Creates a new command class based on file name"
-	}
+		"description": "Creates a new Slash Command"
+	},
 }

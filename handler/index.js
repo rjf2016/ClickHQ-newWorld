@@ -3,9 +3,6 @@ const { promisify } = require('util');
 // eslint-disable-next-line no-unused-vars
 const { Client } = require('discord.js');
 const mongoose = require('mongoose');
-const dotenv = require('dotenv');
-
-dotenv.config();
 
 const globPromise = promisify(glob);
 
@@ -33,7 +30,7 @@ module.exports = async (client) => {
 
 	// Slash Commands
 	const slashCommands = await globPromise(
-		`${process.cwd()}/SlashCommands/*/*.js`,
+		`${process.cwd()}/slashCommands/*/*.js`,
 	);
 
 	const arrayOfSlashCommands = [];
@@ -43,10 +40,43 @@ module.exports = async (client) => {
 		client.slashCommands.set(file.name, file);
 
 		if (['MESSAGE', 'USER'].includes(file.type)) delete file.description;
+		if (file.userPermissions) file.defaultPermission = false;
 		arrayOfSlashCommands.push(file);
 	});
 	client.on('ready', async () => {
-		await client.application.commands.set(arrayOfSlashCommands);
+		// In PROD we set slash commands to global
+		// but while developing, set to guild specific for Discord cache reasons
+		const guild = client.guilds.cache.get('871582937391431681');
+		await guild.commands.set(arrayOfSlashCommands).then((cmd) => {
+			const getRoles = commandName => {
+				const permissions = arrayOfSlashCommands.find(x => x.name === commandName).userPermissions;
+				if (!permissions) return null;
+				return guild.roles.cache.filter(x => x.permissions.has(permissions) && !x.managed);
+			};
+			const fullPermissions = cmd.reduce((acc, x) => {
+				const roles = getRoles(x.name);
+				if (!roles) return acc;
+
+				const permissions = roles.reduce((a, v) => {
+					return [
+						...a,
+						{
+							id: v.id,
+							type: 'ROLE',
+							permission: true,
+						},
+					];
+				}, []);
+				return [
+					...acc,
+					{
+						id: x.id,
+						permissions,
+					},
+				];
+			}, []);
+			guild.commands.permissions.set({ fullPermissions });
+		});
 	});
 
 	// mongoose
