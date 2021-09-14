@@ -1,0 +1,17 @@
+{
+	"New Slash command": {
+		"prefix": "newsc",
+		"body": [
+			"module.exports = {",
+			"\tname: '${TM_FILENAME_BASE:command name}',",
+			"\tdescription: '${1:description}',",
+			"\tuserPermissions: ['${2:ADMINISTRATOR}'],",
+			"\tcategory: '${TM_DIRECTORY/.*[\\\\|\\/]+(.*)/$1/}',\n",
+			"\trun: async (client, interaction, args) => {",
+			"\t\t${0:interaction.reply({ content: 'This is the ${TM_FILENAME_BASE/(.*)/${1:/upcase}/} command' \\});}",
+			"\t},",
+			"};",
+		],
+		"description": "Creates a new Slash Command"
+	},
+}

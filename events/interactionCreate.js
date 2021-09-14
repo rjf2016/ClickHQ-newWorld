@@ -1,0 +1,54 @@
+const { ButtonInteraction } = require('discord.js');
+const client = require('../index');
+
+
+client.on('interactionCreate', async (interaction) => {
+	// Slash Command Handling
+	if (interaction.isCommand()) {
+
+		await interaction.deferReply().catch((err) => {console.error(err);});
+
+		const cmd = client.slashCommands.get(interaction.commandName);
+		if (!cmd) return interaction.followUp({ content: 'An error has occured ' });
+
+		const args = [];
+
+		for (const option of interaction.options.data) {
+			if (option.type === 'SUB_COMMAND') {
+				if (option.name) args.push(option.name);
+				option.options?.forEach((x) => {
+					if (x.value) args.push(x.value);
+				});
+			} else if (option.value) {args.push(option.value);}
+		}
+		interaction.member = interaction.guild.members.cache.get(interaction.user.id);
+
+		cmd.run(client, interaction, args);
+	}
+
+	// Context Menu Handling
+	if (interaction.isContextMenu()) {
+		await interaction.deferReply({ ephemeral: false });
+		const command = client.slashCommands.get(interaction.commandName);
+		if (command) command.run(client, interaction);
+	}
+
+	if (interaction.isButton()) {
+		const hax = interaction.customId.split('/');
+		const [ owner, room ] = [ hax[1], hax[2] ];
+		if (interaction.customId.includes('joinGroup')) {
+			await interaction.deferReply({ ephemeral: true });
+			// Let hacks begin..
+			const channel = await interaction.guild.channels.cache.find(c => c.id == room);
+			if (!channel) await interaction.editReply({ content: 'Oops that group no longer exists!' });
+			await channel.permissionOverwrites.edit(interaction.user, {
+				VIEW_CHANNEL: true,
+			});
+			await interaction.editReply({ content: 'You can now access the group!' });
+		} else if (interaction.customId.includes('cancelGroup')) {
+			if (interaction.user.id !== owner) return interaction.editReply({ content: 'Only the person who started the group can end it!' });
+			await interaction.editReply({ content: 'Deleting the invitation...' });
+		}
+	}
+
+});
