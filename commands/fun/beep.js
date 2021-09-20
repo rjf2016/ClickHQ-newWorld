@@ -1,7 +1,8 @@
 module.exports = {
 	name: 'beep',
-	description: 'Beep!',
-	execute(message) {
-		message.channel.send('Boop.');
+	aliases: ['b'],
+
+	run: async (client, message) => {
+		message.channel.send('Beep');
 	},
 };
