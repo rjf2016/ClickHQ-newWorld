@@ -34,9 +34,9 @@ client.on('interactionCreate', async (interaction) => {
 	}
 
 	if (interaction.isButton()) {
-		const hax = interaction.customId.split('/');
-		const [ owner, room ] = [ hax[1], hax[2] ];
 		if (interaction.customId.includes('joinGroup')) {
+			const hax = interaction.customId.split('/');
+			const [ owner, room ] = [ hax[1], hax[2] ];
 			await interaction.deferReply({ ephemeral: true });
 			// Let hacks begin..
 			const channel = await interaction.guild.channels.cache.find(c => c.id == room);

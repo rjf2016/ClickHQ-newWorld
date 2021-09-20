@@ -48,7 +48,6 @@ module.exports = {
 					.setStyle('SUCCESS'),
 			);
 
-		// eslint-disable-next-line no-unused-vars
 		const inviteEmbed = new MessageEmbed()
 			.setColor(config.color.info)
 			.setTitle(`${interaction.user.username} has started a group!`)

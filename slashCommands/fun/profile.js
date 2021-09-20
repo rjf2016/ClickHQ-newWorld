@@ -97,10 +97,7 @@ module.exports = {
 								.addFields(
 									{ name: 'Level:', value: `${profile.accountLevel}` },
 									{ name: 'Role:', value: `${profile.accountClass}` },
-									{
-										name: 'Favorite weapon:',
-										value: `${profile.favoriteWeapon}`,
-									},
+									{	name: 'Favorite weapon:', value: `${profile.favoriteWeapon}`},
 								)
 								.setFooter(`Last updated: ${profile.lastUpdated}`),
 						],
@@ -109,7 +106,6 @@ module.exports = {
 			});
 		}
 		if (sub === 'edit') {
-
 			UserModel.updateOne({ userID: interaction.user.id }, { $set: cleanData }, function(err, res) {
 				if (err) {
 					console.error(err);
