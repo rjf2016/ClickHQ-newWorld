@@ -1,7 +1,6 @@
 module.exports = {
 	name: 'ping',
 	description: 'returns websocket ping',
-	userPermissions: ['ADMINISTRATOR'],
 	/**
      *
      * @param {Client} client
