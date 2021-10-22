@@ -3,6 +3,7 @@ module.exports = {
 	description: 'Deletes previous messages in current text channel',
 	userPermissions: ['ADMINISTRATOR'],
 	category: 'moderation',
+	type: 1,
 	options: [
 		{
 			name: 'amount',

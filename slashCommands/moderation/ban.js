@@ -1,5 +1,4 @@
 const { MessageEmbed } = require('discord.js');
-const { guilds } = require('../..');
 const { color } = require('../../config.json');
 
 // TODO: add different ban-duration options (eg. 15 minutes, or indefinite) & save banned to DB
@@ -8,18 +7,19 @@ module.exports = {
 	description: 'Ban a user from the server',
 	userPermissions: ['ADMINISTRATOR'],
 	category: 'moderation',
+	type: 1,
 	options: [
 		{
 			name: 'user',
 			description: 'The user to ban',
 			type: 'USER',
-			require: true,
+			required: true,
 		},
 		{
 			name: 'duration',
 			description: 'Ban duration (in days)',
 			type: 'NUMBER',
-			require: true,
+			required: true,
 			choices: [
 				{ name: '1 day', value: 1 },
 				{ name: '2 days', value: 2 },
@@ -34,7 +34,7 @@ module.exports = {
 			name: 'reason',
 			description: 'The reason for ban',
 			type: 'STRING',
-			require: true
+			require: true,
 		},
 	],
 
@@ -48,7 +48,14 @@ module.exports = {
 		const reason = interaction.options.getString('reason');
 		const duration = interaction.options.getNumber('duration');
 
-		const memberToBan = interaction.guild.members.cache.get(user.id)
+		// User isn't in server. We will still ban him
+		if (!user) {
+			const id = interaction.options.get('user')?.value;
+			interaction.guild.bans.create(id)
+				.then(banInfo => interaction.followUp({ embeds: [new MessageEmbed().setColor(color.dark).setDescription(`**${interaction.user.username}** has banned **${banInfo.user?.tag ?? banInfo.tag ?? banInfo}**`)] }))
+		}
+
+		const memberToBan = interaction.guild.members.cache.get(user.id);
 
 		if (user.id === interaction.member.id) {
 			return interaction.followUp({ embeds: [new MessageEmbed().setColor(color.err).setDescription('❌ You cant ban yourself.. weirdo')] });
@@ -57,10 +64,9 @@ module.exports = {
 		if (reason.length > 500) {
 			return interaction.followUp({ ephemeral: true, embeds: [new MessageEmbed().setColor(color.err).setDescription('❌ Your reason exceeded the 500 character limit!')] });
 		}
-
-		// User tried to ban an Admin
+		// User tried to someone with higher or equal roles
 		if (interaction.member.roles.highest.position > memberToBan.roles.highest.position) {
-			memberToBan.ban({ days: duration, reason: reason })
+			memberToBan.ban({ days: duration, reason: reason });
 			return interaction.followUp({ embeds: [new MessageEmbed().setColor(color.dark).setDescription(`**${user.user.username}** has been kicked 👢`).setFields({ name: 'Ban duration', value: `Ban duration: ${duration} day(s)` }, { name: 'Reason', value: `${reason}`})] });
 		} else {
 			return interaction.followUp({ embeds: [new MessageEmbed().setColor(color.err).setDescription(`😅 **${user.user.username}** has roles equal to or higher than yours! \n \t Awkward..`)] });

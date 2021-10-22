@@ -5,6 +5,7 @@ module.exports = {
 	name: 'group',
 	description: 'Creates a hidden voice channel',
 	userPermissions: ['ADMINISTRATOR'],
+	type: 1,
 	/**
      *
      * @param {Client} client

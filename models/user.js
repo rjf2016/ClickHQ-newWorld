@@ -8,7 +8,8 @@ const userSchema = new mongoose.Schema({
 	firstSeen: String,
 	newWorldProfile: {
 		accountName: { type: String, default: '?' },
-		accountLevel: { type: Number, min: 1, max: 65, default: 1 },
+		company: { type: String, default: '?'},
+		accountLevel: { type: Number, min: 1, max: 60, default: 1 },
 		accountClass: { type: String, default: '?' },
 		favoriteWeapon: { type: String, default: '?' },
 		lastUpdated: { type: String, default: '-' },
