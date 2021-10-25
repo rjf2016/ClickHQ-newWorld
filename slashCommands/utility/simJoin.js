@@ -1,6 +1,6 @@
 module.exports = {
-	name: 'ping',
-	description: 'returns websocket ping',
+	name: 'simjoin',
+	description: 'dev testing command to simulate member join',
 	/**
      *
      * @param {Client} client
@@ -8,6 +8,7 @@ module.exports = {
      * @param {String[]} args
      */
 	run: async (client, interaction) => {
-		interaction.followUp({ content: `${client.ws.ping}ms!` });
+		client.emit('guildMemberAdd', interaction.user)
+		interaction.followUp({ content: 'Join simulated' });
 	},
 };

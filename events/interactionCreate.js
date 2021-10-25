@@ -1,29 +1,40 @@
 const { ButtonInteraction } = require('discord.js');
 const client = require('../index');
+const customCommandModel = require('../models/customCommand');
 
 
 client.on('interactionCreate', async (interaction) => {
 	// Slash Command Handling
 	if (interaction.isCommand()) {
 
-		await interaction.deferReply().catch((err) => {console.error(err);});
+		await interaction.deferReply({ ephemeral: false }).catch(() => {});
 
 		const cmd = client.slashCommands.get(interaction.commandName);
-		if (!cmd) return interaction.followUp({ content: 'An error has occured ' });
+		if (cmd) {
 
-		const args = [];
+			const args = [];
 
-		for (const option of interaction.options.data) {
-			if (option.type === 'SUB_COMMAND') {
-				if (option.name) args.push(option.name);
-				option.options?.forEach((x) => {
-					if (x.value) args.push(x.value);
-				});
-			} else if (option.value) {args.push(option.value);}
+			for (const option of interaction.options.data) {
+				if (option.type === 'SUB_COMMAND') {
+					if (option.name) args.push(option.name);
+					option.options?.forEach((x) => {
+						if (x.value) args.push(x.value);
+					});
+				} else if (option.value) {
+					args.push(option.value);
+				}
+			}
+			interaction.member = interaction.guild.members.cache.get(interaction.user.id);
+
+			cmd.run(client, interaction, args);
+		} else {
+			const customCommand = await customCommandModel.findOne({
+				commandName: interaction.commandName,
+			});
+			if (!customCommand) return interaction.followUp({ content: '🤔 Idk that command' });
+
+			return interaction.followUp({ content: customCommand.response });
 		}
-		interaction.member = interaction.guild.members.cache.get(interaction.user.id);
-
-		cmd.run(client, interaction, args);
 	}
 
 	// Context Menu Handling
