@@ -1,6 +1,11 @@
 require('dotenv').config();
 const { Client, Collection, Intents } = require('discord.js');
 
+/**
+ * @param {Client} client
+ * @param {CommandInteraction} interaction
+ */
+
 const allIntents = new Intents(32767)
 const client = new Client({ intents: allIntents });
 

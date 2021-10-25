@@ -1,13 +1,15 @@
 const { glob } = require('glob');
 const { promisify } = require('util');
 // eslint-disable-next-line no-unused-vars
-const { Client } = require('discord.js');
+const { Client, CommandInteraction } = require('discord.js');
 const mongoose = require('mongoose');
+const customCommandModel = require('../models/customCommand');
 
 const globPromise = promisify(glob);
 
 /**
  * @param {Client} client
+ * @param {CommandInteraction} interaction
  */
 
 module.exports = async (client) => {
@@ -44,8 +46,9 @@ module.exports = async (client) => {
 		arrayOfSlashCommands.push(file);
 	});
 	client.on('ready', async () => {
-		// In PROD we set slash commands to global
-		// but while developing, set to guild specific for Discord cache reasons
+		// IMPORTANT !
+		// currently the bot is registering commands for one server (for testing reasons) in the future it will register commands globally
+		// so they can be used in any server the bot is in. When that day comes, these next few lines will need to be changed.
 		const guild = client.guilds.cache.get('871582937391431681');
 		await guild.commands.set(arrayOfSlashCommands).then((cmd) => {
 			const getRoles = commandName => {
@@ -77,6 +80,16 @@ module.exports = async (client) => {
 			}, []);
 			guild.commands.permissions.set({ fullPermissions });
 		});
+
+		customCommandModel.find().then((data) => {
+			data.forEach((cmd) => {
+				const guild = client.guilds.cache.get(cmd.guildId);
+				guild?.commands.create({
+					name: cmd.commandName,
+					description: cmd.commandDescription,
+				})
+			})
+		})
 	});
 
 	// mongoose
