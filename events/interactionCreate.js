@@ -26,7 +26,7 @@ client.on('interactionCreate', async (interaction) => {
 			}
 			interaction.member = interaction.guild.members.cache.get(interaction.user.id);
 
-			cmd.run(client, interaction, args);
+			cmd.run({ client, interaction, args });
 		} else {
 			const customCommand = await customCommandModel.findOne({
 				commandName: interaction.commandName,

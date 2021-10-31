@@ -43,7 +43,7 @@ module.exports = {
 	 * @param {CommandInteraction} interaction
 	*/
 
-	run: async (client, interaction) => {
+	run: async ({ client, interaction }) => {
 		const user = interaction.options.getMember('user');
 		const reason = interaction.options.getString('reason');
 		const duration = interaction.options.getNumber('duration');

@@ -101,7 +101,7 @@ module.exports = {
 	 * @param {String[]} args
 	 */
 
-	run: async (client, interaction) => {
+	run: async ({ client, interaction }) => {
 		const sub = interaction.options.getSubcommand(['view', 'edit']);
 		const target = interaction.options.getMember('target') || await interaction.guild.members.fetch(interaction.user)
 		const name = interaction.options.getString('name');

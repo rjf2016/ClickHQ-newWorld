@@ -13,7 +13,7 @@ module.exports = {
 		},
 	],
 
-	run: async (client, interaction) => {
+	run: async ({ client, interaction }) => {
 		const Amount = interaction.options.getNumber('amount');
 		if (isNaN(Amount)) return interaction.followUp('Thats not a number!');
 		if (Amount <= 1 || Amount > 500) return interaction.followUp('The number of messages must be between 1 and 499!');

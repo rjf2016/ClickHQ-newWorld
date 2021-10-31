@@ -6,7 +6,7 @@ module.exports = {
 	description: 'Internal command to test canvas',
 	category: 'fun',
 
-	run: async (client, interaction) => {
+	run: async ({ client, interaction }) => {
 		const canvas = Canvas.createCanvas(1200, 517);
 		const context = canvas.getContext('2d');
 

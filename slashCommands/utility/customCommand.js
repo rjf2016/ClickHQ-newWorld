@@ -45,6 +45,24 @@ module.exports = {
 				},
 			],
 		},
+		// {
+		// 	name: 'other',
+		// 	description: 'Extra utilities for custom commands',
+		// 	type: 'SUB_COMMAND',
+		// 	required: false,
+		// 	options: [
+		// 		{
+		// 			name: 'list',
+		// 			description: 'List all existing custom commands',
+		// 			type: 'BOOLEAN'
+		// 		},
+		// 	],
+		// },
+		{
+			name: 'ls',
+			description: 'List all existing custom commands in the server',
+			type: 'BOOLEAN',
+		},
 	],
 
 	/**
@@ -53,7 +71,7 @@ module.exports = {
 	 * @param {CommandInteraction} interaction
 	 */
 
-	run: async(client, interaction) => {
+	run: async({ client, interaction }) => {
 		const subCommand = interaction.options.getSubcommand();
 		const commandName = interaction.options.getString('command');
 
@@ -92,11 +110,7 @@ module.exports = {
 				guildId: interaction.guildId,
 			};
 
-			if(!customCommand) {
-				await customCommandModel.create(props);
-			} else {
-				await customCommand.updateOne(props)
-			}
+			!customCommand ? await customCommandModel.create(props) : await customCommand.updateOne(props);
 
 			await interaction.guild.commands.create({
 				name: commandName,
@@ -111,6 +125,7 @@ module.exports = {
 				.addField('Response', `${response} \n\n Try it out, type:  \`/${commandName}\``);
 
 			return interaction.followUp({ embeds: [embed] })
+
 		} else if (subCommand === 'delete') {
 			if (!customCommand) return interaction.followUp({ content: '❌ That custom command doesn\'t exist' })
 			await customCommand.delete();

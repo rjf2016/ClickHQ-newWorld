@@ -3,7 +3,7 @@ module.exports = {
 	description: 'Send the link to New World map',
 	category: 'utility',
 
-	run: async (client, interaction) => {
+	run: async ({ client, interaction }) => {
 		interaction.followUp('https://www.newworld-map.com/#/');
 	},
 };

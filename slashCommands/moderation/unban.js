@@ -23,7 +23,7 @@ module.exports = {
 		},
 	],
 
-	run: async (client, interaction) => {
+	run: async ({ client, interaction }) => {
 		const id = interaction.options.get('user')?.value;
 		const invite = interaction.options.getBoolean('invite');
 

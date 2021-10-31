@@ -24,7 +24,7 @@ module.exports = {
 	 * @param {CommandInteraction} interaction
 	*/
 
-	run: async (client, interaction) => {
+	run: async ({ client, interaction }) => {
 		// Contains the channel || category that the user input to get deleted. (Or if it's a category, to be emptied)
 		const channel = interaction.options.getChannel('channel');
 

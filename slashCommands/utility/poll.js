@@ -65,7 +65,7 @@ module.exports = {
 	],
 
 
-	run: async (client, interaction) => {
+	run: async ({ client, interaction }) => {
 		const question = interaction.options.getString('question');
 		let choiceSlots = [
 			{ name: 'a', value: interaction.options.getString('choice-a'), emojiChar: emojiCharacters['a'], votes: 0 },

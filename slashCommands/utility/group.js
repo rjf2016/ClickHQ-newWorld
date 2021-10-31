@@ -6,13 +6,8 @@ module.exports = {
 	description: 'Creates a hidden voice channel',
 	userPermissions: ['ADMINISTRATOR'],
 	type: 1,
-	/**
-     *
-     * @param {Client} client
-     * @param {CommandInteraction} interaction
-     * @param {String[]} args
-     */
-	run: async (client, interaction) => {
+
+	run: async ({ client, interaction }) => {
 		// This command requires that the server contains a category dedicated to housing spawned group channels.
 		// The name of this category is defined as`serverGroupCategoryName` in the config.json file, in case it is ever changed. The category name is CASE SENSITIVE!
 		const groupCategoryName = config.serverGroupCategoryName;
